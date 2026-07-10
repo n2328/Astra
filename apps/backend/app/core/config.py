@@ -14,10 +14,15 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str
 
+    OPENAI_API_KEY: str = ""
+    OPENAI_MODEL: str = "gpt-4.1-mini"
+
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-2.5-flash"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         case_sensitive=True
     )
-
 
 settings = Settings()
