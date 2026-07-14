@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 
 from app.database.dependencies import get_db
 from app.conversations.schemas import (
@@ -72,4 +73,36 @@ def get_messages(
     return MessageService.get_messages(
         db,
         conversation_id,
+    )
+
+@router.delete("/{conversation_id}")
+def delete_conversation(
+    conversation_id: int,
+    db: Session = Depends(get_db),
+):
+    deleted = ConversationService.delete(
+        db,
+        conversation_id,
+    )
+
+    if not deleted:
+        raise HTTPException(
+            status_code=404,
+            detail="Conversation not found",
+        )
+
+    return {
+        "message": "Conversation deleted"
+    }
+
+@router.patch("/{conversation_id}")
+def rename_conversation(
+    conversation_id: int,
+    data: ConversationCreate,
+    db: Session = Depends(get_db),
+):
+    return ConversationService.rename(
+        db,
+        conversation_id,
+        data.title,
     )

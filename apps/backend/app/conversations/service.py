@@ -29,3 +29,49 @@ class ConversationService:
             db,
             user_id,
         )
+
+    @staticmethod
+    def get_by_id(
+        db: Session,
+        conversation_id: int,
+    ):
+        return db.get(
+            Conversation,
+            conversation_id,
+        )
+
+    @staticmethod
+    def rename(
+        db: Session,
+        conversation_id: int,
+        title: str,
+    ):
+        conversation = db.get(
+            Conversation,
+            conversation_id,
+        )
+
+        if conversation:
+            conversation.title = title
+            db.commit()
+            db.refresh(conversation)
+
+        return conversation
+
+    @staticmethod
+    def delete(
+        db: Session,
+        conversation_id: int,
+    ):
+        conversation = db.get(
+            Conversation,
+            conversation_id,
+        )
+
+        if not conversation:
+            return False
+
+        db.delete(conversation)
+        db.commit()
+
+        return True

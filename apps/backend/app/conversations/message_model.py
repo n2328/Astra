@@ -5,14 +5,16 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
 
-
 class Message(Base):
     __tablename__ = "messages"
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
     conversation_id: Mapped[int] = mapped_column(
-        ForeignKey("conversations.id")
+        ForeignKey(
+            "conversations.id",
+            ondelete="CASCADE",
+        )
     )
 
     role: Mapped[str] = mapped_column(String(20))
@@ -21,7 +23,10 @@ class Message(Base):
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
-        default=datetime.utcnow
+        default=datetime.utcnow,
     )
 
-    conversation = relationship("Conversation")
+    conversation = relationship(
+        "Conversation",
+        back_populates="messages",
+    )

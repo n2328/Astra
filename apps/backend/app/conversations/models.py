@@ -16,3 +16,10 @@ class Conversation(Base):
     )
 
     user = relationship("User")
+
+    messages = relationship(
+        "Message",
+        back_populates="conversation",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
